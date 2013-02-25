@@ -15,17 +15,22 @@ require.config({
 }
 });
 
-// require(['views/app'], function(AppView) {
-//   new AppView;
-// });
 
 require(['collections/users','models/user','mocks'], function(Users, User, Mocks){
 	Mocks.initialize();
   
   AppUsers = new Users();
-	//debugger;
-	AppUsers.fetch();
-	// var user1 = new User({name: "Max", age: "28"});
-	// AppUsers.add(user1);
-	// user1.save();
+	
+  // Override fetch 
+  AppUsers.fetch = function(options){
+     options || (options = {});
+     // Do some other stuff here before calling the actual fetch.
+     return Backbone.Collection.prototype.fetch.call(this, options);
+  };
+
+  var fetchFunction = function(){
+    console.log("Fetch successful");
+  };
+
+  AppUsers.fetch({success: fetchFunction});
 });
